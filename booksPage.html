@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styleHomePage.css">
+    <link rel="stylesheet" href="css/styleBooksPage.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <title>Список книг</title>
+</head>
+
+<body>
+    <div ng-app="myApp" ng-controller="arrCtrl">
+        <header class="header">
+            <div class="container flex header-container">
+
+                <nav class="header-nav">
+                    <ul class="header-list list-reset flex">
+                        <li class="header-list-item">
+                            <a href="homePage.html" class="header-link">
+                                Домашняя страница
+                            </a>
+                        </li>
+                        <li class="header-list-item">
+                            <a href="feedbackPage.html" class="header-link">
+                                Комментарии
+                            </a>
+                        </li>
+                        <li class="header-list-item">
+                            <a href="#" class="header-link">
+                                Список книг
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <button class="btn" ng-hide="isLoggedIn" id="logout" ng-click="goToHomePage()">Выход
+                    из аккаунта</button>
+            </div>
+        </header>
+
+        <main>
+
+
+            <div class="filter">
+                <h2 class="count_header">Всего книг в библиотеке: {{ books.length }}</h2>
+                <p class="filter_1">(Список автоматически сортируется по возрастанию цен книг)</p>
+                <br>
+                <p class="filter_1">Выберите кол-во выводимых в списке книг:
+                    <input list="browsers" ng-model="numOfBooks" size="1" />
+                    <datalist id="browsers">
+                        <option ng-repeat="i in books track by $index">{{ $index + 1 }} </option>
+                    </datalist>
+                </p>
+                <p class="filter_1">Выберите жанр искомых книг:
+                    <select ng-model="genreOfBooks" ng-options="y for (x,y) in genres">
+                    </select>
+                </p>
+
+                <br>
+
+                <div>
+                    <h1 class="filter_1">
+                        <p id="mainText">Добавьте книгу в таблицу:</p>
+                        Название:
+                        <input type="text" ng-model="book.name" name="name" placeholder="Введите название..."
+                            required /><br><br>
+                        Автор:
+                        <input type="text" ng-model="book.writter" name="year" placeholder="Введите автора..."
+                            required /><br><br>
+                        Жанр:
+                        <select ng-model="book.genre" ng-options="genre for genre in genres" required>
+                            <option value="" selected hidden>Выберите жанр...</option>
+                        </select><br><br>
+                        Цена:
+                        <input type="number" ng-model="book.price" name="price" placeholder="Введите цену..."
+                            required /><br><br>
+                    </h1>
+                    <div class="btn-section">
+                        <input type="submit" class="btn" ng-click="addField(book)" value="Добавить">
+                    </div>
+                    <br><br>
+                </div>
+            </div>
+
+
+            <table class="table">
+                <tr>
+                    <th>Название</th>
+                    <th>Автор</th>
+                    <th>Жанр</th>
+                    <th>Цена</th>
+                    <th>Выбрано</th>
+                    <th>Удаление</th>
+                </tr>
+                <tr ng-repeat="x in books | orderBy : 'price' | filter : genreOfBooks | limitTo : numOfBooks">
+                    <td>{{x.name}}</td>
+                    <td>{{x.writter}}</td>
+                    <td>{{x.genre}}</td>
+                    <td>{{x.price | currency}}</td>
+                    <td><input type="checkbox" data-ng-click="sumCalculate(x)" ng-model="x.selected"></td>
+                    <td><button class="btn" data-ng-click="deleteField(x)" style="min-width: 30px;">X</button></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Общая сумма:</td>
+                    <td>{{sumPrice | number : 2}}</td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <br><br><br><br>
+
+            <div ng-controller="countryCtrl">
+                <h2>Узнать страну автора книги</h2>
+                <p class="filter_1">Выберите автора книги и отобразится страна его происхождения<br>
+                    <div class="country_display">
+                        <p class="c_name">Страна: {{selectedWritter.country}}</p>
+                        <p class="c_name">Автор: {{selectedWritter.writter}}</p>
+                    </div>
+                    <div class="country_select">
+                        <label for="model" class="country_lable">
+                            <h3 class="filter_1">Автор книги: </h3>
+                        </label>
+                        <select name="model" ng-model="selectedWritter"
+                            ng-options="country.writter for country in countries">
+                        </select>
+                    </div>
+            </div>
+            <br><br><br><br>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <h2 class="footer-title">
+                Контактные данные:
+            </h2>
+            <ul class=" list-reset contacts-list flex">
+                <li class="contacts-item flex">
+                    <strong class="contacts-item-caption">
+                        Адрес:
+                    </strong>
+                    <p class="contacts-item-text">
+                        Chisinau, Ion Creangă 82/1
+                    </p>
+
+                    <strong class="contacts-item-caption">
+                        E-mail:
+                    </strong>
+                    <p class="contacts-item-text">
+                        bibliotekaOnlineMD@gmail.com
+                    </p>
+
+                    <strong class="contacts-item-caption">
+                        Телефон:
+                    </strong>
+                    <p class="contacts-item-text">
+                        (022) 73-59-55<br>
+                        (+373) 78-75-75
+                    </p>
+                </li>
+                <li class="contacts-item flex">
+                    <iframe class="map"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2719.6942493554943!2d28.788598615574596!3d47.026606279150506!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40c97de71818593b%3A0xa90a7415a849c6af!2z0JHQuNCx0LvQuNC-0YLQtdC60LAg0LjQvC4g0JEu0J8uINCl0LDRiNC00LXRgyAtINGE0LjQu9C40LDQuyDQotGL0YDQs9C-0LLQuNGI0YLQtQ!5e0!3m2!1sru!2s!4v1665694321221!5m2!1sru!2s"
+                        width="400" height="250" frameborder="1" style="border:0" allowfullscreen></iframe><br><br>
+                </li>
+            </ul>
+        </div>
+    </footer>
+
+    <script type="module" src="js/scriptBooks.js"></script>
+
+</body>
+
+</html>
